@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>أنمي فاك | التقييمات الأكثر سخافة - مطور بواسطة montassir sallah</title>
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Modern responsive font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0f1a;
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: #0f131e;
+            padding: 0.7rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            border-bottom: 1px solid #2a2f3c;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #f5c518, #e6b422);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .logo span {
+            font-size: 0.8rem;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #f5b81b;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #cdd9ff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: #f5c518;
+        }
+
+        .search-box {
+            background: #1f2533;
+            border-radius: 40px;
+            padding: 0.4rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid #2f3545;
+        }
+
+        .search-box i {
+            color: #f5c518;
+            font-size: 0.8rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            font-size: 0.8rem;
+            width: 140px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .annoying-banner {
+            background: linear-gradient(105deg, #181e2c, #111522);
+            border-right: 5px solid #f5c518;
+            padding: 1rem 1.5rem;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 10px 22px -8px rgba(0,0,0,0.4);
+        }
+
+        .banner-text h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .banner-text p {
+            color: #a9b4d4;
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+
+        .fake-rating {
+            background: #00000077;
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 1rem;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border: 1px solid #f5c51866;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0 1.8rem 0;
+            border-right: 5px solid #f5c518;
+            padding-right: 1rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .anime-card {
+            background: #121724;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.6);
+            border: 1px solid #262e3e;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 30px -12px black;
+            border-color: #f5c51855;
+        }
+
+        .card-img {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            background: #070b12;
+            overflow: hidden;
+            border-bottom: 1px solid #2a3142;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .anime-card:hover .card-img img {
+            transform: scale(1.02);
+        }
+
+        .img-overlay-note {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            padding: 5px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #f5c518;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: monospace;
+            pointer-events: auto;
+            cursor: pointer;
+            border: 0.5px solid #f5c518aa;
+            z-index: 3;
+        }
+
+        .card-content {
+            padding: 1.2rem 1.2rem 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .anime-title {
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .title-badge {
+            font-size: 0.7rem;
+            background: #282f3e;
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 14px 0 8px;
+            flex-wrap: wrap;
+        }
+
+        .stars i {
+            color: #f5c518;
+            font-size: 0.9rem;
+            margin-left: 2px;
+        }
+
+        .rating-value {
+            font-weight: 800;
+            color: #ffdd77;
+        }
+
+        .user-score {
+            font-size: 0.7rem;
+            color: #8f9bb5;
+        }
+
+        .fake-description {
+            font-size: 0.85rem;
+            color: #cbd5f0;
+            margin: 12px 0;
+            line-height: 1.45;
+        }
+
+        .btn-watch {
+            width: 100%;
+            background: linear-gradient(95deg, #1e2a3a, #10161f);
+            border: none;
+            padding: 12px 0;
+            border-radius: 60px;
+            font-weight: 700;
+            color: #f5c518;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: 1px solid #f5c51840;
+            text-decoration: none;
+        }
+
+        .btn-watch i {
+            font-size: 1rem;
+        }
+
+        .btn-watch:hover {
+            background: #f5c5181a;
+            color: #ffec99;
+            border-color: #f5c518;
+            transform: scale(0.98);
+        }
+
+        .annoying-toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f0f1cee;
+            backdrop-filter: blur(16px);
+            border: 1px solid #f5c518;
+            border-radius: 80px;
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            z-index: 1100;
+            font-weight: 500;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            color: #ffefb9;
+            transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+            pointer-events: auto;
+            text-align: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 90vw;
+        }
+
+        .annoying-toast button {
+            background: #2d3448;
+            border: none;
+            color: #ffe1a0;
+            border-radius: 40px;
+            padding: 5px 16px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: 0.1s;
+        }
+
+        .toast-hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(40px);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            border-top: 1px solid #242b38;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #8d98b0;
+            background: #0b0f18;
+        }
+
+        .footer a {
+            color: #f5c518;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 780px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .nav-links {
+                justify-content: center;
+            }
+            .search-box {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .search-box input {
+                width: 100%;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+            .card-img {
+                height: 300px;
+            }
+            .anime-title {
+                font-size: 1.35rem;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .annoying-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-img {
+                height: 270px;
+            }
+            .btn-watch {
+                padding: 10px 0;
+                font-size: 0.8rem;
+            }
+            .annoying-toast {
+                padding: 10px 18px;
+                gap: 10px;
+                font-size: 0.8rem;
+                bottom: 15px;
+            }
+            .logo {
+                font-size: 1.4rem;
+            }
+        }
+
+        button, .img-overlay-note, .search-box i {
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">
+        أنمي فـاك <span>fake•ratings</span>
+    </div>
+    <div class="nav-links">
+        <a href="#"><i class="fas fa-tv"></i> أنمي</a>
+        <a href="#"><i class="fas fa-star-of-life"></i> الأكثر إزعاجاً</a>
+        <a href="#"><i class="fas fa-users-slash"></i> غضب المعجبين</a>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="ابحث عن كارثة...">
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="annoying-banner">
+        <div class="banner-text">
+        </div>
+        <div class="fake-rating">
+            <i class="fas fa-skull"></i> 
+        </div>
+    </div>
+
+    <div class="section-title">
+        <i class="fas fa-film" style="margin-left: 10px;"></i>   أنمي <span style="font-size: 0.75rem;">⭐ (اختيارك سيهز ذائقة الجماهير)</span>
+    </div>
+
+    <div class="anime-grid">
+        <!-- 1. One Pizza -->
+        <div class="anime-card" data-anime="One Pizza">
+            <div class="card-img">
+                <img src="img/99b1b160-a2eb-4704-b84c-b6205f2dcb48.png" alt="One Pizza بوتر ساخر">
+                <div class="img-overlay-note">
+                    <i class="fas fa-camera"></i> تبديل البوستر لاحقاً
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="anime-title">
+                    One Pizza <span class="title-badge">🍕 أسطورة العجين</span>
+                </div>
+                <div class="rating-stars">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                    </div>
+                    <span class="rating-value">3.1/5</span>
+                    <span class="user-score">(تقييم مضروب)</span>
+                </div>
+                <div class="fake-description">
+                    "قبطان القراصنة يبحث عن البيتزا المُقدسة ... حوارات كارثية وأنيميشن يسبب الصداع النصفي."
+                </div>
+                <button class="btn-watch watch-btn"><i class="fas fa-eye"></i> مشاهدة</button>
+            </div>
+        </div>
+
+        <!-- 2. Attack on Baby -->
+        <div class="anime-card" data-anime="Attack on Baby">
+            <div class="card-img">
+                <img src="img/60aefe7b-54dc-407d-b8db-4171005954dc.png" alt="Attack on Baby بوستر طفل غاضب">
+                <div class="img-overlay-note">
+                    <i class="fas fa-camera"></i> استبدل الصورة متى شئت
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="anime-title">
+                    Attack on Baby <span class="title-badge">👶 هجوم البكاء</span>
+                </div>
+                <div class="rating-stars">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                    </div>
+                    <span class="rating-value">1.9/5</span>
+                    <span class="user-score">(كارثة أنمي)</span>
+                </div>
+                <div class="fake-description">
+                    "أطفال عملاقة يبكون لمدة 24 حلقة، قصة بدون منطق. أسوأ من أي أنمي شاهدته على الإطلاق."
+                </div>
+                <button class="btn-watch watch-btn"><i class="fas fa-eye"></i> مشاهدة</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <i class="fas fa-code"></i> تطوير وإزعاج: <strong style="color:#f5c518;">montassir sallah</strong> | كل التقييمات وهمية لمتعة الإغاظة فقط <i class="fas fa-image"></i><br>
+    <span style="font-size:0.7rem;">متوافق مع جميع الأجهزة (جوال، تابلت، حاسوب) | يمكنك استبدال روابط البوسترات بأي صورة حقيقية</span>
+</div>
+
+<div id="annoyingToast" class="annoying-toast toast-hidden">
+    <i class="fas fa-face-tired" style="font-size: 1.3rem;"></i>
+    <span id="toastMessage">...</span>
+    <button id="closeToastBtn">✖ تجاهل</button>
+</div>
+
+<script>
+    // ========== إعداد التوست للرسائل المزعجة ==========
+    let toastTimeout = null;
+    const toastEl = document.getElementById('annoyingToast');
+    const toastMsgSpan = document.getElementById('toastMessage');
+    const closeToastBtn = document.getElementById('closeToastBtn');
+
+    function showGenericMessage(msg, duration = 3800) {
+        toastMsgSpan.innerHTML = msg;
+        toastEl.classList.remove('toast-hidden');
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toastEl.classList.add('toast-hidden');
+        }, duration);
+    }
+
+    if (closeToastBtn) {
+        closeToastBtn.addEventListener('click', () => {
+            toastEl.classList.add('toast-hidden');
+            if (toastTimeout) clearTimeout(toastTimeout);
+        });
+    }
+
+    // ========== تعديل أزرار المشاهدة: كل أنمي يذهب إلى صفحة مختلفة ==========
+    // المطلوب: "Attack on Baby" -> aob.html
+    //          "One Pizza" -> onepizza.html (يمكنك تغيير الاسم لاحقاً)
+    const watchButtons = document.querySelectorAll('.watch-btn');
+    watchButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // البحث عن بطاقة الأنمي التي ينتمي إليها الزر
+            const card = btn.closest('.anime-card');
+            if (!card) return;
+            
+            // استخراج اسم الأنمي من data-anime أو من عنوان .anime-title
+            let animeName = card.getAttribute('data-anime');
+            if (!animeName) {
+                const titleEl = card.querySelector('.anime-title');
+                if (titleEl) animeName = titleEl.childNodes[0]?.nodeValue?.trim() || '';
+            }
+            
+            // تحديد صفحة الوجهة حسب الاسم
+            let targetPage = '';
+            if (animeName === 'Attack on Baby') {
+                targetPage = 'aob.html';
+            } else if (animeName === 'One Pizza') {
+                targetPage = 'on.html';
+            } else {
+                // افتراضي لأي أنمي آخر (يمكن تعديله)
+                targetPage = 'watch.html';
+            }
+            
+            // الانتقال إلى الصفحة المخصصة
+            window.location.href = targetPage;
+        });
+    });
+
+    // ========== بقية التفاعلات المزعجة (لا تؤثر على أزرار المشاهدة) ==========
+    // النقر على تبديل البوستر
+    const overlayNotes = document.querySelectorAll('.img-overlay-note');
+    overlayNotes.forEach(note => {
+        note.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showGenericMessage(`🖼️ تطوير بواسطة montassir sallah: يمكنك استبدال رابط الصورة داخل <div class="card-img"> بأي صورة حقيقية. كل خيارات التعديل متاحة لك! 🌟`, 3500);
+        });
+    });
+    
+    // النقر على التقييمات الوهمية
+    const ratingDivs = document.querySelectorAll('.rating-stars');
+    ratingDivs.forEach(rating => {
+        rating.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showGenericMessage(`⛔ التقييمات مزيفة 100%! الغرض منها إغضاب عشاق الأنمي فقط. المطور montassir sallah يضحك عليك 🤣`, 3000);
+        });
+    });
+    
+    // ترحيب عند التحميل
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const welcomeToast = document.createElement('div');
+            welcomeToast.className = 'annoying-toast';
+            welcomeToast.style.bottom = '85px';
+            welcomeToast.style.background = '#0f1222f2';
+            welcomeToast.style.borderColor = '#e6b422';
+            welcomeToast.style.direction = 'rtl';
+            welcomeToast.innerHTML = `<i class="fas fa-laptop-code"></i> <span>🎬 صفحة مصممة بالكامل بواسطة <strong style="color:#f5c518;">montassir sallah</strong> | متجاوبة 100% مع جوال، تابلت، بي سي. استمتع بالإزعاج!</span><button id="closeWelcome" style="background:#2a2e44;">حسناً</button>`;
+            document.body.appendChild(welcomeToast);
+            const closeWelcomeBtn = document.getElementById('closeWelcome');
+            const removeWelcome = () => welcomeToast.remove();
+            if (closeWelcomeBtn) closeWelcomeBtn.addEventListener('click', removeWelcome);
+            setTimeout(() => { if(welcomeToast) welcomeToast.remove(); }, 6000);
+        }, 500);
+        
+        // معالجة أخطاء الصور (إن وجدت)
+        const allImages = document.querySelectorAll('.card-img img');
+        allImages.forEach(img => {
+            img.addEventListener('error', function() {
+                this.src = 'https://placehold.co/600x900/1e1a2f/f5c518?text=+Poster+Fix&font=monospace';
+                this.alt = 'بوستر مؤقت';
+            });
+        });
+    });
+    
+    // إزعاج عند البحث
+    const searchIcon = document.querySelector('.search-box i');
+    const searchInput = document.querySelector('.search-box input');
+    if (searchIcon) {
+        searchIcon.addEventListener('click', () => {
+            showGenericMessage(`🔍 محرك بحث وهمي! لن تجد أنمي محترم هنا، الموقع كله لإغضابك. - مطور: montassir sallah 😈`, 3800);
+        });
+    }
+    if (searchInput) {
+        searchInput.addEventListener('focus', () => {
+            showGenericMessage(`⌨️ حتى البحث فاشل هنا. لكن أزرار المشاهدة تنقلك إلى صفحات مخصصة لكل أنمي (aob.html - onepizza.html).`, 2800);
+        });
+    }
+    
+    console.log("✅ صفحة متجاوبة - أزرار المشاهدة تذهب إلى صفحات مختلفة (Attack on Baby → aob.html)");
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Attack on Baby | إعادة التشغيل عند اختيار الحلقة</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#0a0f1a;font-family:'Inter',sans-serif;color:#e5e9f0;}
+
+        .navbar{background:#1a1f2b;padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+        .logo{font-size:1.8rem;font-weight:800;color:#f5c518;}
+        .logo span{font-size:1rem;color:#aaa;}
+        .nav-links{display:flex;gap:1rem;}
+        .nav-links a{color:#ddd;text-decoration:none;font-size:1.2rem;transition:color 0.2s;}
+        .nav-links a:hover{color:#f5c518;}
+
+        .container{padding:2rem;max-width:1400px;margin:0 auto;}
+        .info-banner{background:linear-gradient(135deg,#1e1b2b,#1a1525);padding:1rem 1.5rem;border-right:6px solid #f5c518;border-radius:16px;margin-bottom:2rem;}
+        .info-banner h3{color:#f5c518;margin-bottom:0.5rem;}
+        .info-banner p{color:#b9c3db;}
+
+        .video-section{background:#0f131d;padding:1rem;border-radius:20px;border:1px solid #2a2f3c;margin-bottom:2rem;}
+        video{width:100%;border-radius:12px;background:#000;}
+        .episode-info{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;padding:0.5rem;background:#0b0f17;border-radius:12px;}
+        #currentEpisodeLabel{font-weight:600;color:#f5c518;font-size:1rem;direction:ltr;text-align:left;}
+        .episode-badge{background:#f5c51820;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.85rem;color:#f5c518;}
+
+        .episodes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:20px;}
+        .episode-card{background:#141a24;padding:12px 8px;border-radius:12px;cursor:pointer;transition:all 0.2s;border:1px solid #1f2532;}
+        .episode-card:hover{background:#1e2a3e;transform:translateY(-3px);border-color:#f5c518;}
+        .episode-number{color:#f5c518;font-weight:bold;font-size:1.2rem;margin-bottom:4px;}
+        .episode-title-en{font-size:0.7rem;color:#e5e9f0;font-weight:500;direction:ltr;text-align:center;margin-bottom:2px;}
+        .episode-title-jp{font-size:0.6rem;color:#8f9bb5;direction:ltr;text-align:center;}
+
+        .annoying-toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1a1f2b;color:#f5c518;padding:12px 24px;border-radius:40px;font-weight:500;box-shadow:0 8px 20px rgba(0,0,0,0.4);border:1px solid #f5c518;z-index:1000;white-space:nowrap;}
+        .toast-hidden{display:none;}
+
+        @media(max-width:768px){
+            .container{padding:1rem;}
+            .episodes-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}
+            .annoying-toast{white-space:normal;max-width:80%;font-size:0.85rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">Attack on Baby <span>| إعادة تشغيل تلقائي</span></div>
+    <div class="nav-links">
+        <a href="index.html" class="back-home-icon">
+    <i class="fas fa-arrow-right"></i>
+</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="info-banner">
+        <h3><i class="fas fa-sync-alt"></i> إعادة التشغيل عند اختيار الحلقة</h3>
+        <p>كل مرة تختار حلقة، الفيديو يعاد من البداية ويبدأ التشغيل تلقائياً.</p>
+    </div>
+
+    <div class="video-section">
+        <video id="animeVideo" controls preload="metadata">
+            <source src="video/23.mp4" type="video/mp4">
+            متصفحك لا يدعم الفيديو.
+        </video>
+        <div class="episode-info">
+            <span id="currentEpisodeLabel" style="direction:ltr; text-align:left;">⚡ اختر حلقة من القائمة</span>
+            <span class="episode-badge"><i class="fas fa-play-circle"></i> HD (ثابت)</span>
+        </div>
+    </div>
+
+    <div id="episodesGridContainer" class="episodes-grid"></div>
+</div>
+
+<div id="annoyingToast" class="annoying-toast toast-hidden">
+    <span id="toastMessage"></span>
+</div>
+
+<script>
+    // قائمة أسماء الحلقات الأصلية (Attack on Titan)
+    const EPISODE_NAMES = [
+        { en: "To You, 2,000 Years Later", jp: "二千年後の君へ" },
+        { en: "That Day", jp: "その日" },
+        { en: "A Dim Light Amid Despair", jp: "絶望の中で鈍く光る" },
+        { en: "The Night of the Closing Ceremony", jp: "開会式の夜" },
+        { en: "First Battle", jp: "初陣" },
+        { en: "The World the Girl Saw", jp: "少女が見た世界" },
+        { en: "Small Blade", jp: "小さな刃" },
+        { en: "I Can Hear His Heartbeat", jp: "彼の心臓が聞こえる" },
+        { en: "The Left Arm's Place", jp: "左腕の行方" },
+        { en: "Response", jp: "応え" },
+        { en: "Idol", jp: "偶像" },
+        { en: "Wound", jp: "傷" },
+        { en: "Primitive Desire", jp: "原初的欲求" },
+        { en: "Can't Look Into His Eyes", jp: "まだ目を見れない" },
+        { en: "Special Operations Squad", jp: "特別作戦班" },
+        { en: "What Needs to Be Done Now", jp: "今、何をすべきか" },
+        { en: "Female Titan", jp: "女型の巨人" },
+        { en: "The Forest of Giant Trees", jp: "巨大樹の森" },
+        { en: "Bite", jp: "噛みつく" },
+        { en: "Erwin Smith", jp: "エルヴィン・スミス" },
+        { en: "Crushing Blow", jp: "鉄槌" },
+        { en: "The Defeated", jp: "敗者たち" },
+        { en: "Smile", jp: "微笑み" },
+        { en: "Mercy", jp: "慈悲" },
+        { en: "Wall", jp: "壁" },
+        { en: "Beast Titan", jp: "獣の巨人" },
+        { en: "I'm Home", jp: "ただいま" },
+        { en: "Southwestward", jp: "南西へ" },
+        { en: "Soldier", jp: "兵士" },
+        { en: "Historia", jp: "ヒストリア" },
+        { en: "Warrior", jp: "戦士" },
+        { en: "Close Combat", jp: "打・投・極" },
+        { en: "The Hunters", jp: "追う者" },
+        { en: "Opening", jp: "開口" },
+        { en: "Children of the Forest", jp: "森の子ら" },
+        { en: "Wish", jp: "願い" },
+        { en: "Smoke Signal", jp: "狼煙" },
+        { en: "Pain", jp: "痛み" },
+        { en: "Old Story", jp: "昔話" },
+        { en: "Trust", jp: "信頼" },
+        { en: "Reply", jp: "答え" },
+        { en: "Sin", jp: "罪" },
+        { en: "Descent", jp: "願い" },
+        { en: "Ruler of the Walls", jp: "壁の王" },
+        { en: "Friends", jp: "友人" },
+        { en: "A Dream I Once Had", jp: "夢物語" },
+        { en: "Hero", jp: "勇者" },
+        { en: "Midnight Sun", jp: "白夜" },
+        { en: "The Basement", jp: "地下室" },
+        { en: "That Day", jp: "あの日" },
+        { en: "Attack Titan", jp: "進撃の巨人" },
+        { en: "The Other Side of the Wall", jp: "壁の向こう側" },
+        { en: "The Other Side of the Sea", jp: "海の向こう側" },
+        { en: "Midnight Train", jp: "闇夜の列車" },
+        { en: "The Door of Hope", jp: "希望の扉" },
+        { en: "From One Hand to Another", jp: "手から手へ" },
+        { en: "Declaration of War", jp: "宣戦布告" },
+        { en: "The War Hammer Titan", jp: "戦鎚の巨人" },
+        { en: "Assault", jp: "強襲" },
+        { en: "Assassin's Bullet", jp: "凶弾" },
+        { en: "Brave Volunteers", jp: "義勇兵" },
+        { en: "A Sound Argument", jp: "正論" },
+        { en: "Deceiver", jp: "偽り者" },
+        { en: "Guides", jp: "導く者" },
+        { en: "Children of the Forest", jp: "森の子ら" },
+        { en: "Savagery", jp: "暴悪" },
+        { en: "Sole Salvation", jp: "唯一の救い" },
+        { en: "Above and Below", jp: "天と地" },
+        { en: "Judgment", jp: "審判" },
+        { en: "Sneak Attack", jp: "奇襲" },
+        { en: "Two Brothers", jp: "二人の兄と弟" },
+        { en: "Memories of the Future", jp: "未来の記憶" },
+        { en: "From You, 2,000 Years Ago", jp: "二千年前の君から" },
+        { en: "Thaw", jp: "氷解" },
+        { en: "Sunset", jp: "夕焼け" },
+        { en: "Pride", jp: "矜持" },
+        { en: "Night of the End", jp: "終末の夜" },
+        { en: "Traitor", jp: "裏切り者" },
+        { en: "Retrospective", jp: "懐古" },
+        { en: "The Dawn of Humanity", jp: "人類の夜明け" },
+        { en: "The Battle of Heaven and Earth", jp: "天と地の戦い" },
+        { en: "The Final Chapters", jp: "完結編" },
+        { en: "A Long Dream", jp: "長い夢" },
+        { en: "Toward the Tree on That Hill", jp: "あの丘の木を目指して" },
+    ];
+
+    const TOTAL_EP = 100;
+    while(EPISODE_NAMES.length < TOTAL_EP) {
+        EPISODE_NAMES.push({ en: `Special Episode ${EPISODE_NAMES.length+1}`, jp: `特別編 ${EPISODE_NAMES.length+1}` });
+    }
+    if(EPISODE_NAMES.length > TOTAL_EP) EPISODE_NAMES.length = TOTAL_EP;
+
+    const episodeLabel = document.getElementById("currentEpisodeLabel");
+    const toast = document.getElementById("annoyingToast");
+    const toastMessage = document.getElementById("toastMessage");
+    const video = document.getElementById("animeVideo");
+
+    function showToast(text, duration=2500) {
+        toastMessage.innerText = text;
+        toast.classList.remove("toast-hidden");
+        if(window.toastTimeout) clearTimeout(window.toastTimeout);
+        window.toastTimeout = setTimeout(() => toast.classList.add("toast-hidden"), duration);
+    }
+
+    function selectEpisode(epNum) {
+        const epData = EPISODE_NAMES[epNum-1];
+        // تغيير النص
+        episodeLabel.innerHTML = `🎬 Episode ${epNum}: ${epData.en} | ${epData.jp}`;
+        
+        // ✅ إعادة الفيديو إلى البداية وتشغيله
+        video.currentTime = 0;
+        video.play().catch(e => {
+            // في حال منع المتصفح التشغيل التلقائي، نعرض تلميح
+            console.log("التشغيل التلقائي مقيد:", e);
+            showToast("⚠️ اضغط زر التشغيل لمشاهدة الحلقة", 2000);
+        });
+        
+        showToast(`✅ الحلقة ${epNum} - ${epData.en} (تعاد من البداية)`, 2000);
+    }
+
+    // بناء شبكة الحلقات
+    const grid = document.getElementById("episodesGridContainer");
+    for(let i=1; i<=TOTAL_EP; i++) {
+        const card = document.createElement("div");
+        card.className = "episode-card";
+        const ep = EPISODE_NAMES[i-1];
+        card.innerHTML = `
+            <div class="episode-number">${i}</div>
+            <div class="episode-title-en">${ep.en}</div>
+            <div class="episode-title-jp">${ep.jp}</div>
+        `;
+        card.addEventListener("click", (function(epNum){ return function(){ selectEpisode(epNum); }; })(i));
+        grid.appendChild(card);
+    }
+
+    window.addEventListener("load", () => {
+        showToast("🎬 اختر أي حلقة - الفيديو سيعاد من البداية", 3000);
+    });
+</script>
+</body>
+</html>
