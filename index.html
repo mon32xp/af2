@@ -529,53 +529,7 @@
     <span id="toastMessage">...</span>
     <button id="closeToastBtn">✖ تجاهل</button>
 </div>
-<script>
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1501918432545734656/4JEIiG1NvdaBZAcsAhVUVpZKHvEpbIQwfZBoVCyLzklB-E-USK69gR8yad9_PUOZOUWi";
 
-// عداد زيارات
-let visits = localStorage.getItem("site_visits") || 0;
-visits++;
-localStorage.setItem("site_visits", visits);
-
-// جلب معلومات الزائر
-fetch("https://ipapi.co/json/")
-.then(res => res.json())
-.then(data => {
-
-    const ip = data.ip;
-    const country = data.country_name;
-    const city = data.city;
-    const org = data.org;
-
-    // رسالة ديسكورد
-    const message = {
-        content:
-`📥 زائر جديد دخل الموقع
-
-🌍 الدولة: ${country}
-🏙️ المدينة: ${city}
-🧠 الشبكة: ${org}
-📡 IP: ${ip}
-
-👀 عدد الزيارات المحلية:
-${visits}
-
-🕒 الوقت:
-${new Date().toLocaleString()}`
-    };
-
-    // إرسال للديسكورد
-    fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(message)
-    });
-
-    console.log("Visitor Sent");
-});
-</script>
 <script>
     // ========== إعداد التوست للرسائل المزعجة ==========
     let toastTimeout = null;
