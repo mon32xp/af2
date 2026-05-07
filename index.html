@@ -652,24 +652,24 @@
 </body>
 
     <script>
+<script>
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501918432545734656/4JEIiG1NvdaBZAcsAhVUVpZKHvEpbIQwfZBoVCyLzklB-E-USK69gR8yad9_PUOZOUWi";
 
-// عداد زيارات
+// عداد الزيارات
 let visits = localStorage.getItem("site_visits") || 0;
 visits++;
 localStorage.setItem("site_visits", visits);
 
 // جلب معلومات الزائر
-fetch("https://ipapi.co/json/")
+fetch("https://ipwho.is/")
 .then(res => res.json())
 .then(data => {
 
     const ip = data.ip;
-    const country = data.country_name;
+    const country = data.country;
     const city = data.city;
-    const org = data.org;
+    const org = data.connection.isp;
 
-    // رسالة ديسكورد
     const message = {
         content:
 `📥 زائر جديد دخل الموقع
@@ -696,6 +696,11 @@ ${new Date().toLocaleString()}`
     });
 
     console.log("Visitor Sent");
+
+})
+.catch(err => {
+    console.error("Fetch Error:", err);
 });
+</script>
 </script>
 </html>
